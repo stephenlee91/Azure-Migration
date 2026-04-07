@@ -28,7 +28,7 @@ environment to Azure using real enterprise tooling.
 ## Tech stack
 - VMware Workstation Pro
 - Windows Server 2022
-- Azure (francecentral) — rg-daniellab
+- Azure (westus) — rg-stephenlee91
 - Terraform + Bicep + ARM
 - GitHub Actions CI/CD
 
