@@ -66,4 +66,3 @@ az network bastion show \`
 ## References
 - https://learn.microsoft.com/azure/bastion/bastion-overview
 - https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview
-"@

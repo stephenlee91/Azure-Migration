@@ -74,4 +74,3 @@ Get-ADUser -Filter * -SearchBase "OU=Users,OU=Lab,DC=stephenlab,DC=com" |
 
 ## References
 - https://learn.microsoft.com/entra/identity/hybrid/connect/whatis-azure-ad-connect
-"@
