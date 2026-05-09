@@ -21,9 +21,9 @@ Entra Connect Sync and establish hybrid identity.
 ## Steps
 
 ### 1. Created Azure resource group
-\`\`\`powershell
+```powershell
 New-AzResourceGroup -Name "rg-stephenlab" -Location "westus"
-\`\`\`
+```
 
 ### 2. Installed Entra Connect Sync on DC01
 Downloaded from Microsoft and installed via MSI. Used Express Settings.
@@ -39,11 +39,11 @@ Users amartin, bchen, svc-app appeared in Entra ID portal
 with On-premises sync enabled = Yes
 
 ## Validation
-\`\`\`powershell
+```powershell
 Get-Service ADSync | Select Name, Status
 Get-ADUser -Filter * -SearchBase "OU=Users,OU=Lab,DC=stephenlab,DC=com" |
   Select Name, UserPrincipalName, Enabled
-\`\`\`
+```
 
 ## Issues encountered
 

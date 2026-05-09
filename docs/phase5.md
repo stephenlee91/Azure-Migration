@@ -22,41 +22,41 @@ connect securely via Azure Bastion without a public IP.
 ## Steps
 
 ### 1. Deployed VM via Bicep
-\`\`\`powershell
-az deployment group create \`
-  --resource-group rg-stephenlab \`
-  --template-file infra/bicep/modules/sql-vm.bicep \`
-  --parameters adminPassword="***" \`
+```powershell
+az deployment group create `
+  --resource-group rg-stephenlab `
+  --template-file infra/bicep/modules/sql-vm.bicep `
+  --parameters adminPassword="***" `
   --parameters subnetId="***"
-\`\`\`
+```
 
 ### 2. Connected via Bastion
 Connected through Azure portal Bastion without public IP.
 
 ### 3. Enabled mixed mode authentication
-\`\`\`powershell
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQLServer" \`
+```powershell
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQLServer" `
   -Name "LoginMode" -Value 2
 Restart-Service MSSQLSERVER -Force
-\`\`\`
+```
 
 ### 4. Enabled SA account
-\`\`\`powershell
+```powershell
 sqlcmd -S localhost -E -Q "ALTER LOGIN sa ENABLE; ALTER LOGIN sa WITH PASSWORD = '***';"
-\`\`\`
+```
 
 ### 5. Created LabDB with Employees table
-\`\`\`powershell
+```powershell
 sqlcmd -S localhost -E -d LabDB -Q "SELECT COUNT(*) AS EmployeeCount FROM Employees;"
 -- Returns: 4
-\`\`\`
+```
 
 ## Validation
-\`\`\`powershell
+```powershell
 Get-Service MSSQLSERVER | Select Name, Status
 sqlcmd -S localhost -E -Q "SELECT @@VERSION"
 sqlcmd -S localhost -E -d LabDB -Q "SELECT COUNT(*) AS EmployeeCount FROM Employees;"
-\`\`\`
+```
 
 ## Issues encountered
 

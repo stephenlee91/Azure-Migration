@@ -20,35 +20,35 @@ using AzCopy.
 ## Steps
 
 ### 1. Deployed storage via Bicep
-\`\`\`powershell
-az deployment group create \`
-  --resource-group rg-stephenlab \`
-  --template-file infra/bicep/modules/storage.bicep \`
+```powershell
+az deployment group create `
+  --resource-group rg-stephenlab `
+  --template-file infra/bicep/modules/storage.bicep `
   --verbose
-\`\`\`
+```
 
 ### 2. Downloaded AzCopy on APP01
 Downloaded portable binary from Microsoft Learn and placed at
 C:\AzCopy\azcopy_windows_amd64_10.32.3\azcopy.exe
 
 ### 3. Generated SAS token
-\`\`\`powershell
+```powershell
 \$expiry = (Get-Date).ToUniversalTime().AddHours(4).ToString("yyyy-MM-ddTHH:mmZ")
-az storage share generate-sas \`
-  --account-name stfilesdaniellab \`
-  --name labshare \`
-  --permissions rwdl \`
-  --expiry \$expiry \`
+az storage share generate-sas `
+  --account-name stfilesdaniellab `
+  --name labshare `
+  --permissions rwdl `
+  --expiry \$expiry `
   --output tsv
-\`\`\`
+```
 
 ### 4. Ran AzCopy migration
-\`\`\`powershell
+```powershell
 \$azcopy = "C:\AzCopy\azcopy_windows_amd64_10.32.3\azcopy.exe"
 \$source = "C:\LabShare\"
 \$dest = "https://stfilesdaniellab.file.core.windows.net/labshare/?SAS_TOKEN"
 & \$azcopy copy \$source \$dest --recursive --log-level INFO
-\`\`\`
+```
 
 ## Result
 - 10 files transferred successfully

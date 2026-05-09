@@ -21,21 +21,21 @@ and App Service.
 ## Steps
 
 ### 1. Deployed Recovery Services Vault via Bicep
-\`\`\`powershell
-az deployment group create \`
-  --resource-group rg-stephenlab \`
-  --template-file infra/bicep/modules/recovery-vault.bicep \`
+```powershell
+az deployment group create `
+  --resource-group rg-stephenlab `
+  --template-file infra/bicep/modules/recovery-vault.bicep `
   --verbose
-\`\`\`
+```
 
 ### 2. Enabled backup for VM-SQL01
-\`\`\`powershell
-az backup protection enable-for-vm \`
-  --resource-group rg-stephenlab \`
-  --vault-name rsv-stephenlab \`
-  --vm VM-SQL01 \`
+```powershell
+az backup protection enable-for-vm `
+  --resource-group rg-stephenlab `
+  --vault-name rsv-stephenlab `
+  --vm VM-SQL01 `
   --policy-name policy-sql-daily
-\`\`\`
+```
 
 ### 3. Ran on-demand backup job
 Triggered immediate backup for VM-SQL01 and verified job
@@ -52,13 +52,13 @@ Standard or Premium tier enabling:
 - Point-in-time restore
 
 ## Validation
-\`\`\`powershell
+```powershell
 az backup vault show \`
-  --resource-group rg-stephenlab \`
-  --vault-name rsv-stephenlab \`
-  --query "{name:name, provisioningState:properties.provisioningState}" \`
+  --resource-group rg-stephenlab `
+  --vault-name rsv-stephenlab `
+  --query "{name:name, provisioningState:properties.provisioningState}" `
   --output table
-\`\`\`
+```
 
 ## Screenshots
 - screenshots/phase-08/recovery-vault-overview.png

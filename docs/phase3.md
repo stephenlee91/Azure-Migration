@@ -24,19 +24,19 @@ Generated via Azure portal: Azure Arc → Machines → Add a machine →
 Add a single server. Used Public endpoint connectivity.
 
 ### 2. Ran script on DC01
-\`\`\`powershell
+```powershell
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
 .\OnboardingScript.ps1
-\`\`\`
+```
 
 ### 3. Repeated for APP01
 Generated a separate onboarding script for APP01 and ran it.
 
 ## Validation
-\`\`\`powershell
+```powershell
 # Run on each VM
 Get-Service himds | Select Name, Status
-\`\`\`
+```
 
 Both VMs show Connected in Azure Arc portal.
 

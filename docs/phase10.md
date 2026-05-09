@@ -30,27 +30,27 @@ Single entry point that calls all module Bicep files:
 - modules/monitoring.bicep
 
 ### 2. Created service principal for GitHub Actions
-\`\`\`powershell
+```powershell
 az ad app create --display-name "github-actions-stephenlab"
 az ad sp create --id \$appId
-az role assignment create \`
-  --role "Owner" \`
-  --assignee \$spId \`
+az role assignment create `
+  --role "Owner" `
+  --assignee \$spId `
   --scope "/subscriptions/\$subId/resourceGroups/rg-stephenlab"
-\`\`\`
+```
 
 ### 3. Configured OIDC federated credentials
-\`\`\`powershell
+```powershell
 # Main branch credential
-az ad app federated-credential create \`
-  --id \$appId \`
+az ad app federated-credential create `
+  --id \$appId `
   --parameters federated-credential.json
 
 # Production environment credential
-az ad app federated-credential create \`
-  --id \$appId \`
+az ad app federated-credential create `
+  --id \$appId `
   --parameters federated-credential-prod.json
-\`\`\`
+```
 
 ### 4. Added GitHub secrets
 - AZURE_CLIENT_ID

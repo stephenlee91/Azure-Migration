@@ -23,41 +23,41 @@ via Managed Identity.
 ## Steps
 
 ### 1. Deployed via Bicep
-\`\`\`powershell
-az deployment group create \`
-  --resource-group rg-stephenlab \`
-  --template-file infra/bicep/modules/app-service.bicep \`
+```powershell
+az deployment group create `
+  --resource-group rg-stephenlab `
+  --template-file infra/bicep/modules/app-service.bicep `
   --verbose
-\`\`\`
+```
 
 ### 2. Packaged app on APP01
-\`\`\`powershell
-Compress-Archive -Path "C:\Apps\LabApp\publish\*" \`
+```powershell
+Compress-Archive -Path "C:\Apps\LabApp\publish\*" `
   -DestinationPath "C:\Apps\LabApp\labapp.zip" -Force
-\`\`\`
+```
 
 ### 3. Deployed via ZIP Deploy
-\`\`\`powershell
-az webapp deploy \`
-  --resource-group rg-stephenlab \`
-  --name app-stephenlab \`
-  --src-path "C:\Users\steph\Downloads\labapp.zip" \`
-  --type zip \`
+```powershell
+az webapp deploy `
+  --resource-group rg-stephenlab `
+  --name app-stephenlab `
+  --src-path "C:\Users\steph\Downloads\labapp.zip" `
+  --type zip `
   --verbose
-\`\`\`
+```
 
 ### 4. Verified app running
 Browsed to https://app-stephenlab.azurewebsites.net and confirmed
 the ASP.NET Core MVC app is running in Azure.
 
 ## Validation
-\`\`\`powershell
+```powershell
 az webapp show \`
-  --resource-group rg-stephenlab \`
-  --name app-stephenlab \`
-  --query "{name:name, state:state, url:defaultHostName}" \`
+  --resource-group rg-stephenlab `
+  --name app-stephenlab `
+  --query "{name:name, state:state, url:defaultHostName}" `
   --output table
-\`\`\`
+```
 
 ## Issues encountered
 

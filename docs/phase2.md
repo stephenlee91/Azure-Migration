@@ -24,28 +24,28 @@ NSG, and Azure Bastion for secure VM access without public IPs.
 
 ## Deployment
 
-\`\`\`powershell
-az deployment group create \`
-  --resource-group rg-stephenlab \`
-  --template-file infra/bicep/modules/vnet.bicep \`
+```powershell
+az deployment group create `
+  --resource-group rg-stephenlab `
+  --template-file infra/bicep/modules/vnet.bicep `
   --verbose
-\`\`\`
+```
 
 ## Validation
 
-\`\`\`powershell
-az network vnet show \`
-  --resource-group rg-stephenlab \`
-  --name vnet-stephenlab \`
-  --query "{name:name, addressSpace:addressSpace.addressPrefixes}" \`
+```powershell
+az network vnet show `
+  --resource-group rg-stephenlab `
+  --name vnet-stephenlab `
+  --query "{name:name, addressSpace:addressSpace.addressPrefixes}" `
   --output table
 
-az network bastion show \`
-  --resource-group rg-stephenlab \`
-  --name bastion-stephenlab \`
-  --query "{name:name, sku:sku.name, provisioningState:provisioningState}" \`
+az network bastion show `
+  --resource-group rg-stephenlab `
+  --name bastion-stephenlab `
+  --query "{name:name, sku:sku.name, provisioningState:provisioningState}" `
   --output table
-\`\`\`
+```
 
 ## NSG rules
 
