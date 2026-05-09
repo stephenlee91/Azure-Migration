@@ -42,7 +42,7 @@ az webapp deploy
   --resource-group rg-stephenlab
   --name app-stephenlab
   --src-path "C:\Users\steph\Downloads\labapp.zip"
-  --type zip `
+  --type zip
   --verbose
 ```
 
