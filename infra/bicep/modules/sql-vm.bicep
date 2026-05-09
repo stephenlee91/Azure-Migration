@@ -10,6 +10,9 @@ param subnetId string
 resource nic 'Microsoft.Network/networkInterfaces@2023-04-01' = {
   name: 'nic-${vmName}'
   location: location
+    tags: {
+    Environment: 'Lab'
+  }
   properties: {
     ipConfigurations: [
       {
@@ -28,6 +31,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-04-01' = {
 resource vm 'Microsoft.Compute/virtualMachines@2023-07-01' = {
   name: vmName
   location: location
+    tags: {
+    Environment: 'Lab'
+  }
   properties: {
     hardwareProfile: { vmSize: 'Standard_D2s_v3' }
     osProfile: {
