@@ -1,90 +1,100 @@
-# Phase 9 — Security · Monitor · Policy · App Insights
+# Phase 10 — IaC (Bicep) + GitHub Actions CI/CD
 
 ## Objective
-Configure security monitoring, application performance monitoring,
-alert rules, and Azure Policy for the lab environment.
+Consolidate all infrastructure into a single orchestrated Bicep deployment
+and automate it via GitHub Actions using OIDC authentication.
 
 ## Prerequisites
-- All resources deployed (Phases 1-8)
-- App Service running (Phase 6)
-- VM-SQL01 running (Phase 5)
+- All phases 1-9 complete
+- GitHub repository set up
+- Azure service principal created
 
-## Resources deployed
+## Resources
 
 | Resource                  | Value                              |
 |---------------------------|------------------------------------|
-| Log Analytics Workspace   | log-stephenlab                     |
-| Application Insights      | appi-stephenlab                    |
-| Alert — HTTP 5xx          | alert-http5xx-stephenlab           |
-| Alert — VM CPU            | alert-cpu-sql01                    |
-| Policy — Tagging          | Require Environment tag            |
-| Policy — Security         | Azure Security Benchmark           |
+| Service principal         | github-actions-stephenlab          |
+| Auth method               | OIDC (no stored secrets)           |
+| Workflow file             | .github/workflows/deploy.yml       |
+| Orchestration template    | infra/bicep/main.bicep             |
 
 ## Steps
 
-### 1. Enabled Microsoft Defender for Cloud
+### 1. Created main.bicep orchestration template
+Single entry point that calls all module Bicep files:
+- modules/vnet.bicep
+- modules/sql-vm.bicep
+- modules/app-service.bicep
+- modules/storage.bicep
+- modules/recovery-vault.bicep
+- modules/monitoring.bicep
+
+### 2. Created service principal for GitHub Actions
 \`\`\`powershell
-az security pricing create --name VirtualMachines --tier Standard
-az security pricing create --name SqlServers --tier Standard
-az security pricing create --name AppServices --tier Standard
-\`\`\`
-
-### 2. Deployed monitoring via Bicep
-\`\`\`powershell
-az deployment group create \`
-  --resource-group rg-stephenlab \`
-  --template-file infra/bicep/modules/monitoring.bicep \`
-  --verbose
-\`\`\`
-
-Deployed:
-- Log Analytics Workspace with 30 day retention
-- Application Insights connected to App Service
-- Alert rule for HTTP 5xx errors (threshold 5, window 15 min)
-- Alert rule for VM-SQL01 CPU above 80%
-
-### 3. Assigned Azure Policy initiatives
-\`\`\`powershell
-# Tagging policy
-az policy assignment create \`
-  --name "require-environment-tag" \`
-  --display-name "Require Environment tag on resources" \`
-  --policy "871b6d14-10aa-478d-b590-94f262ecfa99" \`
-  --scope "/subscriptions/\$subId/resourceGroups/rg-stephenlab" \`
-  --params "tag-params.json"
-
-# Security benchmark
-az policy assignment create \`
-  --name "azure-security-benchmark" \`
-  --display-name "Azure Security Benchmark" \`
-  --policy-set-definition "1f3afdf9-d0c9-4c3d-847f-89da613e70a8" \`
+az ad app create --display-name "github-actions-stephenlab"
+az ad sp create --id \$appId
+az role assignment create \`
+  --role "Owner" \`
+  --assignee \$spId \`
   --scope "/subscriptions/\$subId/resourceGroups/rg-stephenlab"
 \`\`\`
 
-## Validation
+### 3. Configured OIDC federated credentials
 \`\`\`powershell
-az monitor app-insights component show \`
-  --resource-group rg-stephenlab \`
-  --app appi-stephenlab \`
-  --query "{name:name, provisioningState:provisioningState}" \`
-  --output table
+# Main branch credential
+az ad app federated-credential create \`
+  --id \$appId \`
+  --parameters federated-credential.json
 
-az policy assignment list \`
-  --scope "/subscriptions/\$subId/resourceGroups/rg-stephenlab" \`
-  --query "[].{name:name, displayName:displayName}" \`
-  --output table
+# Production environment credential
+az ad app federated-credential create \`
+  --id \$appId \`
+  --parameters federated-credential-prod.json
 \`\`\`
 
+### 4. Added GitHub secrets
+- AZURE_CLIENT_ID
+- AZURE_TENANT_ID
+- AZURE_SUBSCRIPTION_ID
+- SQL_ADMIN_PASSWORD
+- SUBNET_ID
+
+### 5. Created GitHub Actions workflow
+Two-job pipeline:
+- validate: builds Bicep to check for errors
+- deploy: deploys via azure/arm-deploy action
+
+### 6. Created production environment in GitHub
+Required for the deploy job OIDC subject claim.
+
+## Issues encountered
+
+### Federated credential subject mismatch
+- **Cause**: Repo name in credential didn't match actual GitHub repo name
+- **Fix**: Deleted and recreated credential with correct repo name
+
+### Policy blocking NIC and VM deployment
+- **Cause**: Tagging policy assigned in Phase 9 was blocking resources
+  without Environment tag during redeployment
+- **Fix**: Removed tagging policy before CI/CD deployment. In production
+  tags would be added to all resources before enabling deny policies.
+
+### Role assignment authorization failed
+- **Cause**: Service principal had Contributor role which cannot manage
+  role assignments
+- **Fix**: Upgraded to Owner role on the resource group
+
+## Validation
+Both GitHub Actions jobs completed successfully:
+- Validate Bicep: passed
+- Deploy infrastructure: succeeded
+
 ## Screenshots
-- screenshots/phase-09/defender-secure-score.png
-- screenshots/phase-09/app-insights-overview.png
-- screenshots/phase-09/alert-rules.png
-- screenshots/phase-09/policy-assignments.png
+- screenshots/phase-10/github-actions-success.png
 
 ## Time taken
-~30 minutes
+~1.5 hours (including troubleshooting)
 
 ## References
-- https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction
-- https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview
-- https://learn.microsoft.com/azure/governance/policy/overview
+- https://learn.microsoft.com/azure/developer/github/connect-from-azure
+- https://learn.microsoft.com/azure/azure-resource-manager/bicep/overview

@@ -21,9 +21,14 @@ environment to Azure using real enterprise tooling.
 |-------|--------------------------------------|-------------|
 | 1     | Hybrid identity + RBAC               | ✅ Complete |
 | 2     | Networking (VNet · Bastion · NSG)    | ✅ Complete |
-| 3     | Azure Arc (DC01 + APP01)             | 🔄 In progress |
-| 4     | Azure Update Manager                 | ⏳ Pending  |
-| ...   | ...                                  | ...         |
+| 3     | Azure Arc (DC01 + APP01)             | ✅ Complete |
+| 4     | Azure Update Manager                 | ✅ Complete |
+| 5     | VM SQL Server 2022 + Bastion access  | ✅ Complete |
+| 6     | App Service+KeyVault+Managed Identity| ✅ Complete |
+| 7     | File Server → Azure Files (AzCopy)   | ✅ Complete |
+| 8     | Backup (SQL + App Service)           | ✅ Complete |
+| 9     | Security·Monitor·Policy·App Insights | ✅ Complete |
+| 10    | IaC + GitHub Actions CI/CD           | ✅ Complete |
 
 ## Tech stack
 - VMware Workstation Pro

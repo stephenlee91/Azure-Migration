@@ -63,7 +63,6 @@ az backup vault show \`
 ## Screenshots
 - screenshots/phase-08/recovery-vault-overview.png
 - screenshots/phase-08/vm-sql01-backup-policy.png
-- screenshots/phase-08/backup-job-completed.png
 
 ## Time taken
 ~20 minutes
