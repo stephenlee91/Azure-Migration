@@ -28,4 +28,3 @@ resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-0
 // Outputs
 output storageAccountName string = storageAccount.name
 output fileShareName string = 'labshare'
-output storageAccountKey string = storageAccount.listKeys().keys[0].value
