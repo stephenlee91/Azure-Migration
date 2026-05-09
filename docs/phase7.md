@@ -21,9 +21,9 @@ using AzCopy.
 
 ### 1. Deployed storage via Bicep
 ```powershell
-az deployment group create `
-  --resource-group rg-stephenlab `
-  --template-file infra/bicep/modules/storage.bicep `
+az deployment group create
+  --resource-group rg-stephenlab
+  --template-file infra/bicep/modules/storage.bicep
   --verbose
 ```
 
@@ -34,11 +34,11 @@ C:\AzCopy\azcopy_windows_amd64_10.32.3\azcopy.exe
 ### 3. Generated SAS token
 ```powershell
 \$expiry = (Get-Date).ToUniversalTime().AddHours(4).ToString("yyyy-MM-ddTHH:mmZ")
-az storage share generate-sas `
-  --account-name stfilesdaniellab `
-  --name labshare `
-  --permissions rwdl `
-  --expiry \$expiry `
+az storage share generate-sas
+  --account-name stfilesdaniellab
+  --name labshare
+  --permissions rwdl
+  --expiry \$expiry
   --output tsv
 ```
 

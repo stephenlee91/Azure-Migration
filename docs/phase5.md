@@ -23,10 +23,10 @@ connect securely via Azure Bastion without a public IP.
 
 ### 1. Deployed VM via Bicep
 ```powershell
-az deployment group create `
-  --resource-group rg-stephenlab `
-  --template-file infra/bicep/modules/sql-vm.bicep `
-  --parameters adminPassword="***" `
+az deployment group create
+  --resource-group rg-stephenlab
+  --template-file infra/bicep/modules/sql-vm.bicep
+  --parameters adminPassword="***"
   --parameters subnetId="***"
 ```
 
@@ -35,7 +35,7 @@ Connected through Azure portal Bastion without public IP.
 
 ### 3. Enabled mixed mode authentication
 ```powershell
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQLServer" `
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQLServer"
   -Name "LoginMode" -Value 2
 Restart-Service MSSQLSERVER -Force
 ```

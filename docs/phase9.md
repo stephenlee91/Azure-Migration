@@ -31,42 +31,42 @@ az security pricing create --name AppServices --tier Standard
 
 ### 2. Deployed monitoring via Bicep
 ```powershell
-az deployment group create `
-  --resource-group rg-stephenlab `
-  --template-file infra/bicep/modules/monitoring.bicep `
+az deployment group create
+  --resource-group rg-stephenlab
+  --template-file infra/bicep/modules/monitoring.bicep
   --verbose
 ```
 
 ### 3. Assigned Azure Policy initiatives
 ```powershell
-az policy assignment create `
-  --name "require-environment-tag" `
-  --display-name "Require Environment tag on resources" `
-  --policy "871b6d14-10aa-478d-b590-94f262ecfa99" `
-  --scope "/subscriptions/$subId/resourceGroups/rg-stephenlab" `
+az policy assignment create
+  --name "require-environment-tag"
+  --display-name "Require Environment tag on resources"
+  --policy "871b6d14-10aa-478d-b590-94f262ecfa99"
+  --scope "/subscriptions/$subId/resourceGroups/rg-stephenlab"
   --params "tag-params.json"
 ```
 
 # Security benchmark
 ```powershell
-az policy assignment create `
-  --name "azure-security-benchmark" `
-  --display-name "Azure Security Benchmark" `
-  --policy-set-definition "1f3afdf9-d0c9-4c3d-847f-89da613e70a8" `
+az policy assignment create
+  --name "azure-security-benchmark"
+  --display-name "Azure Security Benchmark"
+  --policy-set-definition "1f3afdf9-d0c9-4c3d-847f-89da613e70a8"
   --scope "/subscriptions/\$subId/resourceGroups/rg-stephenlab"
 ```
 
 ## Validation
 ```powershell
-az monitor app-insights component show `
-  --resource-group rg-stephenlab `
-  --app appi-stephenlab `
-  --query "{name:name, provisioningState:provisioningState}" `
+az monitor app-insights component show
+  --resource-group rg-stephenlab
+  --app appi-stephenlab
+  --query "{name:name, provisioningState:provisioningState}"
   --output table
 
-az policy assignment list `
-  --scope "/subscriptions/\$subId/resourceGroups/rg-stephenlab" `
-  --query "[].{name:name, displayName:displayName}" `
+az policy assignment list
+  --scope "/subscriptions/\$subId/resourceGroups/rg-stephenlab"
+  --query "[].{name:name, displayName:displayName}"
   --output table
 ```
 

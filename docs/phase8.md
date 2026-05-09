@@ -22,18 +22,18 @@ and App Service.
 
 ### 1. Deployed Recovery Services Vault via Bicep
 ```powershell
-az deployment group create `
-  --resource-group rg-stephenlab `
-  --template-file infra/bicep/modules/recovery-vault.bicep `
+az deployment group create
+  --resource-group rg-stephenlab
+  --template-file infra/bicep/modules/recovery-vault.bicep
   --verbose
 ```
 
 ### 2. Enabled backup for VM-SQL01
 ```powershell
-az backup protection enable-for-vm `
-  --resource-group rg-stephenlab `
-  --vault-name rsv-stephenlab `
-  --vm VM-SQL01 `
+az backup protection enable-for-vm
+  --resource-group rg-stephenlab
+  --vault-name rsv-stephenlab
+  --vm VM-SQL01
   --policy-name policy-sql-daily
 ```
 
@@ -53,10 +53,10 @@ Standard or Premium tier enabling:
 
 ## Validation
 ```powershell
-az backup vault show \`
-  --resource-group rg-stephenlab `
-  --vault-name rsv-stephenlab `
-  --query "{name:name, provisioningState:properties.provisioningState}" `
+az backup vault show
+  --resource-group rg-stephenlab
+  --vault-name rsv-stephenlab
+  --query "{name:name, provisioningState:properties.provisioningState}"
   --output table
 ```
 
